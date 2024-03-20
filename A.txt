@@ -1,14 +1,68 @@
--- Add data into Employees table
-INSERT INTO Employees (EmployeeID, EmployeeName, Department)
-VALUES 
-    (1, 'John Doe', 'IT'),
-    (2, 'Jane Smith', 'HR'),
-    (3, 'Michael Johnson', 'Finance');
+-- Create a table to store employee information
+CREATE TABLE Employees (
+    EmployeeID INT IDENTITY(1,1) PRIMARY KEY,
+    EmployeeName VARCHAR(100),
+    Department VARCHAR(100)
+);
 
--- Add data into Attendance table
--- Assuming today's date is 2024-03-20
-INSERT INTO Attendance (EmployeeID, AttendanceDate, Present)
-VALUES
-    (1, '2024-03-20', 1), -- John Doe present
-    (2, '2024-03-20', 0), -- Jane Smith absent
-    (3, '2024-03-20', 1); -- Michael Johnson present
+-- Create a table to store attendance records
+CREATE TABLE Attendance (
+    AttendanceID INT IDENTITY(1,1) PRIMARY KEY,
+    EmployeeID INT,
+    AttendanceDate DATE,
+    Present BIT -- 1 for present, 0 for absent
+);
+
+-- Stored procedure to add employees
+CREATE PROCEDURE AddEmployee
+    @EmployeeName VARCHAR(100),
+    @Department VARCHAR(100)
+AS
+BEGIN
+    INSERT INTO Employees (EmployeeName, Department)
+    VALUES (@EmployeeName, @Department);
+END;
+
+-- Stored procedure to add attendance
+CREATE PROCEDURE AddAttendance
+    @EmployeeID INT,
+    @AttendanceDate DATE,
+    @Present BIT
+AS
+BEGIN
+    INSERT INTO Attendance (EmployeeID, AttendanceDate, Present)
+    VALUES (@EmployeeID, @AttendanceDate, @Present);
+END;
+
+-- View to get the count of days present for each employee in a month using pivot
+CREATE VIEW EmployeeAttendancePivot AS
+SELECT 
+    EmployeeID,
+    EmployeeName,
+    [1] AS DaysPresent1,
+    [2] AS DaysPresent2,
+    [3] AS DaysPresent3,
+    -- Continue this pattern for all days in a month
+    [30] AS DaysPresent30,
+    [31] AS DaysPresent31
+FROM 
+    (SELECT 
+         e.EmployeeID,
+         e.EmployeeName,
+         DAY(a.AttendanceDate) AS DayOfMonth,
+         COUNT(a.Present) AS DaysPresent
+     FROM 
+         Employees e
+     LEFT JOIN 
+         Attendance a ON e.EmployeeID = a.EmployeeID
+     WHERE 
+         MONTH(a.AttendanceDate) = MONTH(GETDATE()) -- Assuming current month
+         AND YEAR(a.AttendanceDate) = YEAR(GETDATE()) -- Assuming current year
+         AND a.Present = 1 -- Assuming 1 represents present
+     GROUP BY 
+         e.EmployeeID, e.EmployeeName, DAY(a.AttendanceDate)) AS SourceTable
+PIVOT
+(
+    SUM(DaysPresent) 
+    FOR DayOfMonth IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15],[16],[17],[18],[19],[20],[21],[22],[23],[24],[25],[26],[27],[28],[29],[30],[31])
+) AS PivotTable;
