@@ -1,29 +1,25 @@
--- Add some sample employees
-EXEC AddEmployee 'John Doe', 'Sales';
-EXEC AddEmployee 'Jane Smith', 'HR';
-EXEC AddEmployee 'Michael Johnson', 'Finance';
-
--- Add attendance records for the sample employees
--- Assuming '1' represents present and '0' represents absent
--- Assuming the current month is March 2024 for demonstration purposes
-
--- John Doe
-EXEC AddAttendance 1, '2024-03-01', 1;
-EXEC AddAttendance 1, '2024-03-02', 1;
-EXEC AddAttendance 1, '2024-03-03', 1;
-EXEC AddAttendance 1, '2024-03-04', 0;
-EXEC AddAttendance 1, '2024-03-05', 1;
-
--- Jane Smith
-EXEC AddAttendance 2, '2024-03-01', 1;
-EXEC AddAttendance 2, '2024-03-02', 1;
-EXEC AddAttendance 2, '2024-03-03', 0;
-EXEC AddAttendance 2, '2024-03-04', 1;
-EXEC AddAttendance 2, '2024-03-05', 1;
-
--- Michael Johnson
-EXEC AddAttendance 3, '2024-03-01', 1;
-EXEC AddAttendance 3, '2024-03-02', 1;
-EXEC AddAttendance 3, '2024-03-03', 1;
-EXEC AddAttendance 3, '2024-03-04', 1;
-EXEC AddAttendance 3, '2024-03-05', 0;
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR(50)
+);
+CREATE TABLE StudentCourses (
+    StudentID INT,
+    CourseID INT,
+    PRIMARY KEY (StudentID, CourseID),
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+);
+CREATE TABLE CourseInstructors (
+    CourseID INT,
+    InstructorID INT,
+    PRIMARY KEY (CourseID, InstructorID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID),
+    FOREIGN KEY (InstructorID) REFERENCES Instructors(InstructorID)
+);
+CREATE TABLE StudentDepartments (
+    StudentID INT,
+    DepartmentID INT,
+    PRIMARY KEY (StudentID, DepartmentID),
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+);
