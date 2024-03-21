@@ -36,3 +36,53 @@ CREATE TABLE StudentDepartments (
     FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
     FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
 );
+-- Inserting data into Students table
+INSERT INTO Students (StudentID, StudentName) VALUES
+(1, 'Alice'),
+(2, 'Bob'),
+(3, 'Charlie');
+
+-- Inserting data into Courses table
+INSERT INTO Courses (CourseID, CourseName) VALUES
+(1, 'Database Systems'),
+(2, 'Calculus'),
+(3, 'Linear Algebra'),
+(4, 'Economics');
+
+-- Inserting data into Instructors table
+INSERT INTO Instructors (InstructorID, InstructorName) VALUES
+(1, 'Dr. Brown'),
+(2, 'Dr. Green'),
+(3, 'Dr. White'),
+(4, 'Dr. Black');
+
+-- Inserting data into Departments table
+INSERT INTO Departments (DepartmentID, DepartmentName) VALUES
+(1, 'CS'),
+(2, 'Math'),
+(3, 'Economics');
+
+-- Inserting data into StudentCourses table
+INSERT INTO StudentCourses (StudentID, CourseID) VALUES
+(1, 1), -- Alice registered for Database Systems
+(1, 2), -- Alice registered for Calculus
+(2, 3), -- Bob registered for Linear Algebra
+(2, 2), -- Bob registered for Calculus
+(3, 1), -- Charlie registered for Database Systems
+(3, 4); -- Charlie registered for Economics
+
+-- Inserting data into CourseInstructors table
+INSERT INTO CourseInstructors (CourseID, InstructorID) VALUES
+(1, 1), -- Dr. Brown teaches Database Systems
+(1, 2), -- Dr. Green also teaches Database Systems
+(2, 2), -- Dr. Green teaches Calculus
+(3, 3), -- Dr. White teaches Linear Algebra
+(4, 1), -- Dr. Brown teaches Economics
+(4, 4); -- Dr. Black also teaches Economics
+
+-- Inserting data into StudentDepartments table
+INSERT INTO StudentDepartments (StudentID, DepartmentID) VALUES
+(1, 1), -- Alice is in the CS department
+(2, 2), -- Bob is in the Math department
+(3, 1), -- Charlie is in the CS department
+(3, 3); -- Charlie is also in the Economics department
