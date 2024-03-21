@@ -2,6 +2,11 @@ CREATE TABLE Students (
     StudentID INT PRIMARY KEY,
     StudentName VARCHAR(50)
 );
+CREATE TABLE Instructors (
+    InstructorID INT PRIMARY KEY,
+    InstructorName VARCHAR(50)
+);
+
 CREATE TABLE Courses (
     CourseID INT PRIMARY KEY,
     CourseName VARCHAR(50)
