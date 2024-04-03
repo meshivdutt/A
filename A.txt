@@ -1,33 +1,86 @@
-[03/04, 10:38 am] Shiv Dutt Jha: import pyodbc
+import pandas as pd
+import pyodbc
 
-# Connect to SQL Server
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=your_server_name;DATABASE=your_database_name;UID=your_username;PWD=your_password')
+# Database connection parameters
+server = 'your_server_name'
+database = 'OnlineLearningPlatform'
+username = 'your_username'
+password = 'your_password'
 
-# Create a cursor
-cursor = conn.cursor()
+def create_database(server, database, username, password):
+    try:
+        # Connect to SQL Server and create database
+        with pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE=master;UID={username};PWD={password}') as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"CREATE DATABASE {database}")
+            print(f"Database '{database}' created successfully.")
+    except Exception as e:
+        print("Error creating database:", e)
+
+def create_schema(server, database, username, password, schema_name):
+    try:
+        # Connect to the database and create schema
+        with pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}') as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"CREATE SCHEMA {schema_name}")
+            print(f"Schema '{schema_name}' created successfully.")
+    except Exception as e:
+        print(f"Error creating schema '{schema_name}':", e)
+
+def create_tables(server, database, username, password, schema_name, table_definitions):
+    try:
+        # Connect to the database
+        with pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}') as conn:
+            cursor = conn.cursor()
+            # Create tables in the schema
+            for table_name, table_definition in table_definitions.items():
+                cursor.execute(f"CREATE TABLE {schema_name}.{table_name} ({table_definition})")
+                print(f"Table '{table_name}' created successfully in schema '{schema_name}'.")
+    except Exception as e:
+        print("Error creating tables:", e)
+
+def move_data_to_table(server, database, username, password, source_df, target_table):
+    try:
+        # Connect to the database
+        with pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}') as conn:
+            # Move data to the table
+            source_df.to_sql(target_table, conn, if_exists='replace', index=False, schema='Staging')
+            print(f"Data moved to table '{target_table}' successfully.")
+    except Exception as e:
+        print(f"Error moving data to table '{target_table}':", e)
+
+# Define table definitions
+table_definitions_ods = {
+    'Courses': 'CourseID INT PRIMARY KEY, Title VARCHAR(255), Description VARCHAR(1000), Category VARCHAR(100), InstructorID INT',
+    'Users': 'UserID INT PRIMARY KEY, UserName VARCHAR(255), Role VARCHAR(50), Location VARCHAR(100)',
+    'Enrollments': 'EnrollmentID INT PRIMARY KEY, CourseID INT, UserID INT, EnrollmentDate DATE, CompletionStatus VARCHAR(50)',
+    'Assessments': 'AssessmentID INT PRIMARY KEY, EnrollmentID INT, Grade FLOAT',
+    'Transactions': 'TransactionID INT PRIMARY KEY, UserID INT, Amount FLOAT, TransactionDate DATE'
+}
+
+# Define table definitions for staging
+table_definitions_staging = {
+    'Courses': 'CourseID INT, Title VARCHAR(255), Description VARCHAR(1000), Category VARCHAR(100), InstructorID INT',
+    'Users': 'UserID INT, UserName VARCHAR(255), Role VARCHAR(50), Location VARCHAR(100)',
+    'Enrollments': 'EnrollmentID INT, CourseID INT, UserID INT, EnrollmentDate DATE, CompletionStatus VARCHAR(50)',
+    'Assessments': 'AssessmentID INT, EnrollmentID INT, Grade FLOAT',
+    'Transactions': 'TransactionID INT, UserID INT, Amount FLOAT, TransactionDate DATE'
+}
 
 # Create database
-cursor.execute("CREATE DATABASE OnlineLearningPlatform")
+create_database(server, database, username, password)
 
-# Commit the transaction
-conn.commit()
+# Create staging schema
+create_schema(server, database, username, password, 'Staging')
 
-# Close the connection
-conn.close()
-[03/04, 10:38 am] Shiv Dutt Jha: # Connect to the database
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=your_server_name;DATABASE=OnlineLearningPlatform;UID=your_username;PWD=your_password')
-cursor = conn.cursor()
+# Create ODS schema
+create_schema(server, database, username, password, 'ODS')
 
-# Create Staging Schema
-cursor.execute("CREATE SCHEMA Staging")
+# Create tables in ODS
+create_tables(server, database, username, password, 'ODS', table_definitions_ods)
 
-# Commit the transaction
-conn.commit()
-
-# Close the connection
-conn.close()
-[03/04, 10:38 am] Shiv Dutt Jha: # Assuming you have Excel files with data, use pandas to read Excel files and insert into staging tables
-import pandas as pd
+# Create tables in staging
+create_tables(server, database, username, password, 'Staging', table_definitions_staging)
 
 # Read Excel files
 courses_df = pd.read_excel('courses.xlsx')
@@ -36,68 +89,9 @@ enrollments_df = pd.read_excel('enrollments.xlsx')
 assessments_df = pd.read_excel('assessments.xlsx')
 transactions_df = pd.read_excel('transactions.xlsx')
 
-# Connect to the database
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=your_server_name;DATABASE=OnlineLearningPlatform;UID=your_username;PWD=your_password')
-
-# Insert data into Staging tables
-courses_df.to_sql('Staging.Courses', conn, if_exists='replace', index=False)
-users_df.to_sql('Staging.Users', conn, if_exists='replace', index=False)
-enrollments_df.to_sql('Staging.Enrollments', conn, if_exists='replace', index=False)
-assessments_df.to_sql('Staging.Assessments', conn, if_exists='replace', index=False)
-transactions_df.to_sql('Staging.Transactions', conn, if_exists='replace', index=False)
-
-# Close the connection
-conn.close()
-[03/04, 10:39 am] Shiv Dutt Jha: # Connect to the database
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=your_server_name;DATABASE=OnlineLearningPlatform;UID=your_username;PWD=your_password')
-cursor = conn.cursor()
-
-# Create ODS Schema
-cursor.execute("CREATE SCHEMA ODS")
-
-# Commit the transaction
-conn.commit()
-
-# Close the connection
-conn.close()
-[03/04, 10:39 am] Shiv Dutt Jha: # Connect to the database
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=your_server_name;DATABASE=OnlineLearningPlatform;UID=your_username;PWD=your_password')
-cursor = conn.cursor()
-
-# Create tables in ODS
-# Example:
-cursor.execute("""
-CREATE TABLE ODS.Courses (
-    CourseID INT PRIMARY KEY,
-    Title VARCHAR(255),
-    Description VARCHAR(1000),
-    Category VARCHAR(100),
-    InstructorID INT,
-    CONSTRAINT FK_Instructor FOREIGN KEY (InstructorID) REFERENCES ODS.Users(UserID)
-)
-""")
-
-# Commit the transaction
-conn.commit()
-
-# Close the connection
-conn.close()
-[03/04, 10:39 am] Shiv Dutt Jha: # Connect to the database
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=your_server_name;DATABASE=OnlineLearningPlatform;UID=your_username;PWD=your_password')
-
-# Transform and clean data as needed
-
-# Move data to ODS tables
-# Example:
-cursor = conn.cursor()
-cursor.execute("""
-INSERT INTO ODS.Courses (CourseID, Title, Description, Category, InstructorID)
-SELECT CourseID, Title, Description, Category, InstructorID
-FROM Staging.Courses
-""")
-
-# Commit the transaction
-conn.commit()
-
-# Close the connection
-conn.close()
+# Move data to staging tables
+move_data_to_table(server, database, username, password, courses_df, 'Courses')
+move_data_to_table(server, database, username, password, users_df, 'Users')
+move_data_to_table(server, database, username, password, enrollments_df, 'Enrollments')
+move_data_to_table(server, database, username, password, assessments_df, 'Assessments')
+move_data_to_table(server, database, username, password, transactions_df, 'Transactions')
