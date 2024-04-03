@@ -1,97 +1,31 @@
-import pandas as pd
 import pyodbc
+import pandas as pd
 
 # Database connection parameters
 server = 'your_server_name'
-database = 'OnlineLearningPlatform'
+database = 'your_database_name'
 username = 'your_username'
 password = 'your_password'
 
-def create_database(server, database, username, password):
-    try:
-        # Connect to SQL Server and create database
-        with pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE=master;UID={username};PWD={password}') as conn:
-            cursor = conn.cursor()
-            cursor.execute(f"CREATE DATABASE {database}")
-            print(f"Database '{database}' created successfully.")
-    except Exception as e:
-        print("Error creating database:", e)
+# Establish database connection
+conn_str = f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+conn = pyodbc.connect(conn_str)
 
-def create_schema(server, database, username, password, schema_name):
-    try:
-        # Connect to the database and create schema
-        with pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}') as conn:
-            cursor = conn.cursor()
-            cursor.execute(f"CREATE SCHEMA {schema_name}")
-            print(f"Schema '{schema_name}' created successfully.")
-    except Exception as e:
-        print(f"Error creating schema '{schema_name}':", e)
+# Excel files to be imported
+excel_files = ['courses.xlsx', 'users.xlsx', 'enrollments.xlsx', 'assessments.xlsx', 'transactions.xlsx']
 
-def create_tables(server, database, username, password, schema_name, table_definitions):
-    try:
-        # Connect to the database
-        with pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}') as conn:
-            cursor = conn.cursor()
-            # Create tables in the schema
-            for table_name, table_definition in table_definitions.items():
-                cursor.execute(f"CREATE TABLE {schema_name}.{table_name} ({table_definition})")
-                print(f"Table '{table_name}' created successfully in schema '{schema_name}'.")
-    except Exception as e:
-        print("Error creating tables:", e)
+# Import Excel files to SQL Server
+for file in excel_files:
+    # Read Excel file into DataFrame
+    df = pd.read_excel(file)
+    
+    # Define table name
+    table_name = file.split('.')[0]
+    
+    # Write DataFrame to SQL Server
+    df.to_sql(table_name, conn, if_exists='replace', index=False)
 
-def move_data_to_table(server, database, username, password, source_df, target_table):
-    try:
-        # Connect to the database
-        with pyodbc.connect(f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}') as conn:
-            # Move data to the table
-            source_df.to_sql(target_table, conn, if_exists='replace', index=False, schema='Staging')
-            print(f"Data moved to table '{target_table}' successfully.")
-    except Exception as e:
-        print(f"Error moving data to table '{target_table}':", e)
+# Close database connection
+conn.close()
 
-# Define table definitions
-table_definitions_ods = {
-    'Courses': 'CourseID INT PRIMARY KEY, Title VARCHAR(255), Description VARCHAR(1000), Category VARCHAR(100), InstructorID INT',
-    'Users': 'UserID INT PRIMARY KEY, UserName VARCHAR(255), Role VARCHAR(50), Location VARCHAR(100)',
-    'Enrollments': 'EnrollmentID INT PRIMARY KEY, CourseID INT, UserID INT, EnrollmentDate DATE, CompletionStatus VARCHAR(50)',
-    'Assessments': 'AssessmentID INT PRIMARY KEY, EnrollmentID INT, Grade FLOAT',
-    'Transactions': 'TransactionID INT PRIMARY KEY, UserID INT, Amount FLOAT, TransactionDate DATE'
-}
-
-# Define table definitions for staging
-table_definitions_staging = {
-    'Courses': 'CourseID INT, Title VARCHAR(255), Description VARCHAR(1000), Category VARCHAR(100), InstructorID INT',
-    'Users': 'UserID INT, UserName VARCHAR(255), Role VARCHAR(50), Location VARCHAR(100)',
-    'Enrollments': 'EnrollmentID INT, CourseID INT, UserID INT, EnrollmentDate DATE, CompletionStatus VARCHAR(50)',
-    'Assessments': 'AssessmentID INT, EnrollmentID INT, Grade FLOAT',
-    'Transactions': 'TransactionID INT, UserID INT, Amount FLOAT, TransactionDate DATE'
-}
-
-# Create database
-create_database(server, database, username, password)
-
-# Create staging schema
-create_schema(server, database, username, password, 'Staging')
-
-# Create ODS schema
-create_schema(server, database, username, password, 'ODS')
-
-# Create tables in ODS
-create_tables(server, database, username, password, 'ODS', table_definitions_ods)
-
-# Create tables in staging
-create_tables(server, database, username, password, 'Staging', table_definitions_staging)
-
-# Read Excel files
-courses_df = pd.read_excel('courses.xlsx')
-users_df = pd.read_excel('users.xlsx')
-enrollments_df = pd.read_excel('enrollments.xlsx')
-assessments_df = pd.read_excel('assessments.xlsx')
-transactions_df = pd.read_excel('transactions.xlsx')
-
-# Move data to staging tables
-move_data_to_table(server, database, username, password, courses_df, 'Courses')
-move_data_to_table(server, database, username, password, users_df, 'Users')
-move_data_to_table(server, database, username, password, enrollments_df, 'Enrollments')
-move_data_to_table(server, database, username, password, assessments_df, 'Assessments')
-move_data_to_table(server, database, username, password, transactions_df, 'Transactions')
+print("Data imported successfully from Excel to SQL Server.")
