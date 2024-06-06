@@ -1,287 +1,85 @@
-Slide 2: Project Importance
-
-Importance of Data Analytics
-Data-driven decision-making
-Identifying trends and patterns
-Enhancing operational efficiency and effectiveness
-Slide 3: Challenges in Online Learning
-
-Complexity of Data Management
-Diverse data sources
-Large volumes of data
-Need for real-time insights
-Slide 4: Benefits of OLAP System
-
-Enhanced Decision-Making
-Informed course offerings
-Targeted marketing strategies
-Efficient resource allocation
-Slide 5: Data Warehouse Architecture
-
-Staging, ODS, and Datawarehouse
-Streamlined data flow
-Cleansing and transformation
-Aggregation and summarization
-Slide 6: Step 1: Create Database
-
-Establish connection to SQL Server
-Create the OnlineLearningPlatform database
-Slide 7: Step 2: Create Staging Schema
-
-Establish connection to the database
-Create the Staging schema for temporary data storage
-Slide 8: Step 3: Move Excel Data to Staging Schema
-
-Read Excel files into pandas DataFrames
-Insert data into Staging tables using Python and pyodbc
-Slide 9: Step 4: Create ODS Schema
-
-Establish connection to the database
-Create the Operational Data Store (ODS) schema for storing cleansed and transformed data
-Slide 10: Step 5: Create Tables in ODS Environment
-
-Define table definitions for Courses, Users, Enrollments, Assessments, and Transactions
-Create tables in the ODS environment
-Slide 11: Step 6: Transform and Clean Data
-
-Connect to the database
-Transform and clean data as needed
-Move data from Staging to ODS tables
-Slide 12: Step 7: Create Data Warehouse Schema
-
-Establish connection to the database
-Create the Datawarehouse schema for storing aggregated and summarized data
-Slide 13: Step 8: Create Tables in Datawarehouse
-
-Define table definitions for Dimension and Fact tables
-Create tables in the Datawarehouse environment
-Slide 14: Step 9: Move Data from ODS to Datawarehouse
-
-Connect to the database
-Move data from ODS to Datawarehouse tables for analytics and reporting
-Slide 15: Conclusion
-
-Summarize the key achievements and outcomes of the project
-Highlight the importance of the Data Warehouse OLAP system in enabling informed decision-making and driving success in the online learning platform
-This presentation provides a comprehensive overview of the project, including the steps involved in implementing the Data Warehouse OLAP system and the importance of data analytics in enhancing decision-making processes.
-
-
-
-User
-11.Prepare proper PPT (Team member, Who handled what, Scehma of Staging, ODS, Datawarehouse, Code,
-
-Flow, Setup)
-ChatGPT
-Certainly! Below is a structured PowerPoint presentation for the project, including team member details, individual responsibilities, schema diagrams, code snippets, and setup instructions:
-
-Slide 1: Project Overview
-
-Title: Designing a Data Warehouse OLAP System for an Online Learning Platform
-Project Team:
-Team Leader: [Your Name]
-Database Engineer: [Team Member 1]
-Data Analyst: [Team Member 2]
-Developer: [Team Member 3]
-Slide 2: Team Members and Responsibilities
-
-Team Leader: Overall project management, coordination, and quality assurance.
-Database Engineer: Designing database schemas, implementing database components, and ensuring data integrity.
-Data Analyst: Analyzing data requirements, defining OLAP queries, and generating insights for decision-making.
-Developer: Writing Python code for data extraction, transformation, loading, and system integration.
-Slide 3: Schema Overview
-
-Staging Schema:
-Temporarily stores raw data from various sources.
-Facilitates data cleansing and transformation.
-Operational Data Store (ODS) Schema:
-Stores cleansed and transformed data.
-Serves as an intermediate storage for analytics.
-Data Warehouse Schema:
-Stores aggregated and summarized data for reporting and analysis.
-Slide 4: Schema Diagrams
-
-[Insert Staging Schema Diagram]
-Slide 5: Schema Diagrams (cont'd)
-
-[Insert ODS Schema Diagram]
-Slide 6: Schema Diagrams (cont'd)
-
-[Insert Data Warehouse Schema Diagram]
-Slide 7: Code Overview
-
-Python Code for Data Processing:
-Extracts data from Excel files.
-Cleanses and transforms data.
-Loads data into Staging and ODS tables.
-SQL Code for Database Setup:
-Creates databases, schemas, and tables.
-Defines table structures and relationships.
-Slide 8: Code Example: Python
-
-python
-Copy code
-# Example Python code snippet for data extraction and loading
-import pandas as pd
-import pyodbc
-
-# Read Excel data
-courses_df = pd.read_excel('courses.xlsx')
-# Connect to SQL Server
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=server_name;DATABASE=database_name;UID=username;PWD=password')
-cursor = conn.cursor()
-# Insert data into Staging table
-courses_df.to_sql('Courses', conn, if_exists='replace', index=False, schema='Staging')
-Slide 9: Code Example: SQL
-
-sql
-Copy code
--- Example SQL code snippet for creating tables in ODS
-CREATE TABLE ODS.Courses (
-    CourseID INT PRIMARY KEY,
-    Title VARCHAR(255),
-    Description VARCHAR(1000),
-    Category VARCHAR(100),
-    InstructorID INT
-);
-Slide 10: Workflow
-
-Step 1: Extract data from Excel files.
-Step 2: Transform and clean data using Python.
-Step 3: Load data into Staging tables in SQL Server.
-Step 4: Transform and load data into ODS tables.
-Step 5: Aggregate and summarize data in Data Warehouse tables.
-Slide 11: Setup Instructions
-
-Install Python and required libraries (e.g., pandas, pyodbc).
-Set up a SQL Server instance.
-Run Python scripts for data processing.
-Execute SQL scripts for database setup.
-Slide 12: Conclusion
-
-Summary of project achievements and outcomes.
-Acknowledgment of team members' contributions.
-Future recommendations for system enhancements and improvements.
-This structured PowerPoint presentation provides a comprehensive overview of the project, including team member details, responsibilities, schema diagrams, code snippets, workflow, setup instructions, and conclusion.
-
-User
-Make 15 slides
-ChatGPT
-Certainly! Below is an expanded version of the PowerPoint presentation with 15 slides:
-
-Slide 1: Project Overview
-
-Title: Designing a Data Warehouse OLAP System for an Online Learning Platform
-Project Team:
-Team Leader: [Your Name]
-Database Engineer: [Team Member 1]
-Data Analyst: [Team Member 2]
-Developer: [Team Member 3]
-Slide 2: Team Members and Responsibilities
-
-Team Leader: Overall project management, coordination, and quality assurance.
-Database Engineer: Designing database schemas, implementing database components, and ensuring data integrity.
-Data Analyst: Analyzing data requirements, defining OLAP queries, and generating insights for decision-making.
-Developer: Writing Python code for data extraction, transformation, loading, and system integration.
-Slide 3: Project Importance
-
-Importance of Data Analytics
-Data-driven decision-making
-Identifying trends and patterns
-Enhancing operational efficiency and effectiveness
-Slide 4: Challenges in Online Learning
-
-Complexity of Data Management
-Diverse data sources
-Large volumes of data
-Need for real-time insights
-Slide 5: Benefits of OLAP System
-
-Enhanced Decision-Making
-Informed course offerings
-Targeted marketing strategies
-Efficient resource allocation
-Slide 6: Data Warehouse Architecture
-
-Staging Schema:
-Temporarily stores raw data from various sources.
-Facilitates data cleansing and transformation.
-Slide 7: Data Warehouse Architecture (cont'd)
-
-Operational Data Store (ODS) Schema:
-Stores cleansed and transformed data.
-Serves as an intermediate storage for analytics.
-Slide 8: Data Warehouse Architecture (cont'd)
-
-Data Warehouse Schema:
-Stores aggregated and summarized data for reporting and analysis.
-Slide 9: Schema Diagrams
-
-[Insert Staging Schema Diagram]
-Slide 10: Schema Diagrams (cont'd)
-
-[Insert ODS Schema Diagram]
-Slide 11: Schema Diagrams (cont'd)
-
-[Insert Data Warehouse Schema Diagram]
-Slide 12: Code Overview
-
-Python Code for Data Processing:
-Extracts data from Excel files.
-Cleanses and transforms data.
-Loads data into Staging and ODS tables.
-Slide 13: Code Overview (cont'd)
-
-SQL Code for Database Setup:
-Creates databases, schemas, and tables.
-Defines table structures and relationships.
-Slide 14: Workflow
-
-Step 1: Extract data from Excel files.
-Step 2: Transform and clean data using Python.
-Step 3: Load data into Staging tables in SQL Server.
-Step 4: Transform and load data into ODS tables.
-Step 5: Aggregate and summarize data in Data Warehouse tables.
-Slide 15: Conclusion
-
-Summary of project achievements and outcomes.
-Acknowledgment of team members' contributions.
-Future recommendations for system enhancements and improvements.
-This expanded PowerPoint presentation provides a detailed overview of the project, including team member details, responsibilities, project importance, challenges, benefits, schema diagrams, code snippets, workflow, and conclusion.
-
-User
-Meaningful points in conclusion 
-ChatGPT
-Certainly! Here are some meaningful points to include in the conclusion of the presentation:
-
-Achievements: Highlight key achievements and milestones reached during the project, such as successfully designing and implementing the Data Warehouse OLAP system.
-
-Data Insights: Emphasize the importance of the insights generated through the system, which provide valuable information for decision-making in the online learning platform.
-
-Enhanced Decision-Making: Discuss how the system empowers administrators and instructors to make informed decisions regarding course offerings, user engagement strategies, and resource allocation.
-
-Operational Efficiency: Point out how the system improves operational efficiency by streamlining data management processes, enabling faster access to information, and facilitating better resource utilization.
-
-Improved User Experience: Highlight the impact of the system on the user experience, such as personalized recommendations, targeted marketing campaigns, and enhanced course quality based on feedback analysis.
-
-Future Enhancements: Suggest potential areas for future enhancements and developments, such as integrating advanced analytics techniques, expanding data sources, or incorporating machine learning algorithms for predictive analytics.
-
-Team Collaboration: Acknowledge the collaborative effort of the project team and express gratitude for their dedication, teamwork, and contributions to the project's success.
-
-Client Satisfaction: Mention the importance of client satisfaction and how the project outcomes align with the client's expectations and requirements.
-
-Continuous Improvement: Emphasize the importance of continuous improvement and ongoing maintenance to ensure the system remains effective and adaptable to evolving needs and technologies.
-
-Final Thoughts: Conclude with a final thought or reflection on the significance of the project in driving innovation, improving decision-making processes, and ultimately contributing to the success of the online learning platform.
-
-Including these points in the conclusion will provide a meaningful wrap-up to the presentation and leave a lasting impression on the audience.
-
-
-2 / 2
-
-
-
-
-
-Message ChatGPT…
-
-ChatGPT can make mistakes. Consider checking important information.
+import sys
+import boto3
+import traceback
+from datetime import datetime
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from awsglue.context import GlueContext
+from awsglue.job import Job
+from pyspark.context import SparkContext
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import lit
+
+# Initialize GlueContext and SparkContext
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+
+# Parse job parameters
+args = getResolvedOptions(sys.argv, ['JOB_NAME'])
+job.init(args['JOB_NAME'], args)
+
+# Initialize boto3 clients
+dynamodb = boto3.resource('dynamodb')
+job_runs_table = dynamodb.Table('JobRuns')
+pipeline_failures_table = dynamodb.Table('PipelineFailures')
+
+# Log job run start
+def log_job_run_start(job_name):
+    try:
+        response = job_runs_table.put_item(
+            Item={
+                'JobName': job_name,
+                'RunId': job.run_id,
+                'StartTime': datetime.utcnow().isoformat(),
+                'Status': 'STARTED'
+            }
+        )
+        print(f"Job run start logged: {response}")
+    except Exception as e:
+        print(f"Error logging job run start: {e}")
+
+# Log job run failure
+def log_job_run_failure(job_name, error_message):
+    try:
+        response = pipeline_failures_table.put_item(
+            Item={
+                'JobName': job_name,
+                'RunId': job.run_id,
+                'FailureTime': datetime.utcnow().isoformat(),
+                'ErrorMessage': error_message
+            }
+        )
+        print(f"Job run failure logged: {response}")
+    except Exception as e:
+        print(f"Error logging job run failure: {e}")
+
+# Main script logic
+try:
+    log_job_run_start(args['JOB_NAME'])
+    
+    # Example processing logic
+    # Replace this with your actual Glue job logic
+    # Read data from a data source
+    datasource = glueContext.create_dynamic_frame.from_catalog(database = "your_database", table_name = "your_table")
+
+    # Process data
+    processed_data = datasource.toDF().withColumn('processed', lit(True))
+
+    # Write data to a target
+    # Example: writing to S3
+    glueContext.write_dynamic_frame.from_options(
+        frame = DynamicFrame.fromDF(processed_data, glueContext, "processed_data"),
+        connection_type = "s3",
+        connection_options = {"path": "s3://your-target-bucket/"},
+        format = "parquet"
+    )
+    
+    job.commit()
+except Exception as e:
+    error_message = str(e)
+    print(f"Job failed: {error_message}")
+    log_job_run_failure(args['JOB_NAME'], error_message)
+    traceback.print_exc()
+    sys.exit(1)
